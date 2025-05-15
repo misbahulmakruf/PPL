@@ -34,10 +34,16 @@ with st.sidebar:
     st.title("BookVerse")
     st.markdown("Discover your next favorite book")
     st.markdown("---")
-    
+
     menu = st.radio(
         "Navigation",
-        ["Home", "Popular Books", "Random Discovery", "Similar Books", "AI Assistant"],
+        [
+            "🏠 Home",
+            "🔥 Popular Books",
+            "🎲 Random Discovery",
+            "🔍 Similar Books",
+            "🤖 AI Assistant"
+        ],
         index=0,
         key="nav"
     )
@@ -46,24 +52,24 @@ with st.sidebar:
     st.caption("© 2025 BookVerse Team")
 
 # --- Routing ---
-if menu == "Home":
+if menu == "🏠 Home":
     show_dashboard_with_search()
 
-elif menu == "Popular Books":
+elif menu == "🔥 Popular Books":
     st.title("Popular Books")
     show_popular_books()
 
-elif menu == "Random Discovery":
+elif menu == "🎲 Random Discovery":
     st.title("Discover Random Books")
     show_random_books()
 
-elif menu == "Similar Books":
+elif menu == "🔍 Similar Books":
     st.title("Find Similar Books")
     title = st.text_input("Enter book title to search:")
     if st.button("Search") and title.strip():
         show_similar_books(title)
 
-elif menu == "AI Assistant":
+elif menu == "🤖 AI Assistant":
     show_ai_assistant_rag()
 
 # --- Footer ---

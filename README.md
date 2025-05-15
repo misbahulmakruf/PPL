@@ -51,7 +51,7 @@ cd book_recommender_system
 ### 2. Install dependencies
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirement.txt
 ```
 
 ### 3. Prepare the data
