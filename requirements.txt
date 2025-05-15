@@ -4,7 +4,7 @@ pandas
 numpy
 requests
 Pillow
-torch==1.13.1
+torch==1.12.1
 torchvision
 scikit-learn
 fastapi
