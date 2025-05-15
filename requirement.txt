@@ -1,0 +1,17 @@
+# Core dependencies
+streamlit
+pandas
+numpy
+requests
+Pillow
+torch
+torchvision
+scikit-learn
+fastapi
+uvicorn
+# Visualization
+matplotlib
+seaborn
+
+# Additional utilities
+python-dotenv
