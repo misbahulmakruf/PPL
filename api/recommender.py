@@ -57,18 +57,20 @@ def get_popular_books(ratings, books, n=5):
     
     # Sort by average rating descending
     book_stats = book_stats.sort_values('mean', ascending=False)
-    
+
     top_books = []
-    for isbn in book_stats['isbn'].head(n):
+    for _, row in book_stats.head(n).iterrows():
+        isbn = str(row['isbn'])
         match = books[books['ISBN'] == isbn]
         if match.empty:
             continue
         book_info = match.iloc[0]
         top_books.append({
             "isbn": isbn,
-            "title": book_info['Book-Title'],
-            "author": book_info['Book-Author'],
-            "year": book_info['Year-Of-Publication']
+            "title": str(book_info['Book-Title']),
+            "author": str(book_info['Book-Author']),
+            "year": int(book_info['Year-Of-Publication']) if str(book_info['Year-Of-Publication']).isdigit() else None,
+            "rating": round(float(row['mean']), 2)  # ⬅️ Tambahkan rating rata-rata
         })
 
     return top_books

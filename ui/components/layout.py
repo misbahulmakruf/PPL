@@ -1,4 +1,5 @@
 import streamlit as st
+import math
 from components.utils import get_cover_url
 from components.book_card import generate_book_card_html
 
@@ -123,6 +124,115 @@ def show_book_grid(books: list, *, with_rating: bool = False):
     st.html(full_html)  
 
     #st.html(html)
+def show_book_grid_columns(books: list, *, with_rating: bool = False):
+    if not books:
+        st.warning("No books found. Try adjusting your search criteria.")
+        return
+
+    st.markdown("""
+    <style>
+    .book-grid-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        justify-content: space-between;
+        padding: 1rem 0;
+    }
+
+    .book-card-grid {
+        background: white;
+        flex: 0 0 calc(33% - 1rem);
+        box-shadow: rgba(0, 0, 0, 0.06) 0px 4px 12px;
+        border-radius: 12px;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        transition: transform 0.2s ease;
+    }
+
+    .book-card-grid:hover {
+        transform: translateY(-4px);
+        box-shadow: rgba(0, 0, 0, 0.15) 0px 8px 20px;
+    }
+
+    .book-cover-grid {
+        width: 120px;
+        height: 180px;
+        object-fit: cover;
+        border-radius: 6px;
+        margin-bottom: 0.75rem;
+        box-shadow: rgba(0, 0, 0, 0.08) 0px 2px 6px;
+    }
+
+    .book-title-grid {
+        font-size: 1rem;
+        font-weight: bold;
+        color: #2E3192;
+        margin: 0.25rem 0;
+        line-height: 1.3;
+    }
+
+    .book-meta-grid {
+        font-size: 0.85rem;
+        color: #555;
+        margin-bottom: 0.5rem;
+    }
+
+    .book-rating-grid {
+        font-size: 0.85rem;
+        color: #FFA000;
+        margin-top: 0.25rem;
+    }
+
+    @media (max-width: 900px) {
+        .book-card-grid {
+            flex: 0 0 calc(50% - 1rem);
+        }
+    }
+
+    @media (max-width: 600px) {
+        .book-card-grid {
+            flex: 0 0 100%;
+        }
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    cards_html = ""
+    for book in books:
+        cover_url = (
+            book.get('Image-URL-L')
+            or f"http://covers.openlibrary.org/b/isbn/{book.get('isbn', '')}-L.jpg"
+            or "https://via.placeholder.com/120x180?text=No+Cover"
+        )
+        title = book.get('title', 'No Title')
+        publisher = book.get('publisher', 'Unknown Publisher')
+        year = book.get('year', '')
+        rating = book.get('predicted_rating') or book.get('score')
+
+        card = f"""
+        <div class="book-card-grid">
+            <img src="{cover_url}" alt="{title} cover" class="book-cover-grid"/>
+            <div class="book-title-grid">{title}</div>
+            <div class="book-meta-grid">{publisher} ({year})</div>"""
+
+        if with_rating and rating:
+            rounded_rating = math.floor(rating * 10)
+            stars = ("⭐" * rounded_rating) + "☆" * (10 - rounded_rating)
+            card += f"""<div class="book-rating-grid">{stars} {rating*10:.1f}/10.0</div>"""
+
+        card += "</div>"
+        cards_html += card
+
+    full_html = f"""
+    <div class="book-grid-container">
+        {cards_html}
+    </div>
+    """
+
+    st.html(full_html)
 
 def show_loading_spinner():
     SPINNER_HTML = """
