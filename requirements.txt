@@ -9,11 +9,12 @@ torchvision
 scikit-learn
 fastapi
 uvicorn
+show_ai_assistant_rag
+SentenceTransformer
+
 # Visualization
 matplotlib
 seaborn
 
 # Additional utilities
 python-dotenv
-show_ai_assistant_rag
-SentenceTransformer
