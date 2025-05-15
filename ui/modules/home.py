@@ -1,11 +1,20 @@
 import streamlit as st
 import requests
 from components.layout import show_book_grid,show_book_grid_columns, show_loading_spinner
+import os
+
 def show_dashboard_with_search():
-    st.html("""
+    
+    
+    static_path= os.path.join(os.path.dirname(__file__))
+    bg_url = os.path.join(os.path.dirname(__file__), "static", "banner.jpg")
+
+    st.markdown(f"""
         <style>
-        .hero-section {
-            background: linear-gradient(to right, #4a00e0, #8e2de2);
+        .hero-section {{
+            background-image: url('{bg_url}');
+            background-size: cover;
+            background-position: center;
             color: white;
             padding: 5rem 2rem;
             border-radius: 16px;
@@ -13,25 +22,25 @@ def show_dashboard_with_search():
             margin-top: 2rem;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
             font-family: 'Segoe UI', sans-serif;
-        }
-        .hero-title {
+        }}
+        .hero-title {{
             font-size: 3rem;
             font-weight: bold;
             margin-bottom: 1rem;
             letter-spacing: 1px;
-        }
-        .hero-subtitle {
+        }}
+        .hero-subtitle {{
             font-size: 1.25rem;
             font-weight: 300;
             opacity: 0.95;
-        }
+        }}
         </style>
 
         <div class="hero-section">
             <div class="hero-title">📚 Welcome to BookVerse</div>
             <div class="hero-subtitle">Your personalized reading companion</div>
         </div>
-    """)
+    """, unsafe_allow_html=True)
 
 
     # --- Search section ---------------
