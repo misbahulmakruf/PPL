@@ -9,6 +9,7 @@ torchvision
 scikit-learn
 fastapi
 uvicorn
+sentence-transformers
 # Visualization
 matplotlib
 seaborn
