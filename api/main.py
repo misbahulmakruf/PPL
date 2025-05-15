@@ -12,7 +12,7 @@ from api.recommender import (
     get_similar_books_cf  # optional: collaborative similarity
 )
 from api.recommender_content import (
-    recommend_similar_books as get_similar_books_content,
+    recommend_similar_books,
     search_books_by_title)
 
 app = FastAPI()
@@ -35,6 +35,7 @@ try:
     ratings.columns = ratings.columns.str.strip()
     ratings = ratings[['User-ID', 'ISBN', 'Book-Rating']]
     ratings.columns = ['user_id', 'isbn', 'rating']
+    books['Year-Of-Publication']=int(books['Year-Of-Publication']) if str(books['Year-Of-Publication']).isdigit() else None
     # books['Year-Of-Publication'] = pd.to_numeric(books['Year-Of-Publication'], errors='coerce')
     # books = books.dropna(subset=['Year-Of-Publication'])
     # books['Year-Of-Publication'] = books['Year-Of-Publication'].astype(int)
@@ -113,12 +114,28 @@ def search_and_recommend(title_query: str):
 
         isbn = results.iloc[0]['ISBN']
         similar_books = recommend_similar_books(isbn)
+        isbn = results.iloc[0]['ISBN']
 
+        # Ambil data rating untuk ISBN tersebut
+        book_ratings = ratings[ratings['isbn'] == isbn]
+
+        # Hitung average rating
+        if not book_ratings.empty:
+            avg_rating = round(book_ratings['rating'].mean(), 2)
+            count_rating = int(book_ratings['rating'].count())
+        else:
+            avg_rating = None
+            count_rating = 0
         return {
             "original": {
                 "isbn": isbn,
                 "title": results.iloc[0]['Book-Title'],
-                "author": results.iloc[0]['Book-Author']
+                "author": results.iloc[0]['Book-Author'],
+                "year":int( results.iloc[0]['Year-Of-Publication']) if str(results.iloc[0]['Year-Of-Publication']).isdigit() else None,
+                "publisher": results.iloc[0]['Publisher'],
+                "score": avg_rating,
+                "num_ratings": count_rating
+
             },
             "recommendations": similar_books
         }
@@ -129,7 +146,7 @@ def search_and_recommend(title_query: str):
 @app.get("/similar_content/{isbn}")
 def similar_books_content(isbn: str):
     try:
-        return {"similar_books": get_similar_books_content(isbn)}
+        return {"similar_books": recommend_similar_books(isbn)}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
