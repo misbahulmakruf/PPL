@@ -5,7 +5,7 @@ from modules.random import show_random_books
 from modules.similar import show_similar_books
 from modules.user_recommend import show_user_recommend
 from modules.home import show_dashboard_with_search
-from modules.assistant import show_ai_assistant_rag
+from modules.assistant_ui import show_ai_assistant_from_api
 # --- Page config ---
 st.set_page_config(
     page_title="BookVerse",
@@ -37,13 +37,7 @@ with st.sidebar:
 
     menu = st.radio(
         "Navigation",
-        [
-            "🏠 Home",
-            "🔥 Popular Books",
-            "🎲 Random Discovery",
-            "🔍 Similar Books",
-            "🤖 AI Assistant"
-        ],
+        ["Home", "Popular Books", "Random Discovery", "AI Assistant"],
         index=0,
         key="nav"
     )
@@ -68,12 +62,11 @@ elif menu == "🔍 Similar Books":
     title = st.text_input("Enter book title to search:")
     if st.button("Search") and title.strip():
         show_similar_books(title)
-
-elif menu == "🤖 AI Assistant":
-    show_ai_assistant_rag()
+elif menu == "AI Assistant":
+    show_ai_assistant_from_api()
 
 # --- Footer ---
-st.markdown("<hr>", unsafe_allow_html=True)
+st.html("<hr>")
 st.markdown(
     "<div style='text-align: center; color: #999;'>Made with ❤️ by BookVerse Team</div>",
     unsafe_allow_html=True

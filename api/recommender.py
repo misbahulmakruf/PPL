@@ -41,7 +41,7 @@ def get_top_n_recommendations(user_id, ratings, books, model=None, top_n=5):
     return result
 
 
-def get_popular_books(ratings, books, n=5):
+def get_popular_books(ratings, books, n=6):
     """
     Get the most popular books based on average rating and number of ratings
     """
@@ -65,37 +65,60 @@ def get_popular_books(ratings, books, n=5):
         if match.empty:
             continue
         book_info = match.iloc[0]
+        year_raw = book_info['Year-Of-Publication']
+        year = int(year_raw) if pd.notna(year_raw) and int(year_raw) > 1000 and int(year_raw) <= 2050 else None
         top_books.append({
             "isbn": isbn,
             "title": str(book_info['Book-Title']),
             "author": str(book_info['Book-Author']),
-            "year": int(book_info['Year-Of-Publication']) if str(book_info['Year-Of-Publication']).isdigit() else None,
-            "rating": round(float(row['mean']), 2)  # ⬅️ Tambahkan rating rata-rata
+            "year": year,
+            "publisher" : str(book_info['Publisher']),
+            "score": round(float(row['mean']), 2)/10  # ⬅️ Tambahkan rating rata-rata
         })
-
+    print(match.iloc[0])
     return top_books
 
 
-def get_random_books(books, n=5):
+def get_random_books(books, ratings, n=6):
     """
-    Get n random books from the dataset
+    Get n random books and attach average rating as score
     """
-    if books is None:
+    if books is None or ratings is None:
         return []
 
-    sample = books.sample(n=n)
-    return [
-        {
+    # 1. Hitung skor rata-rata dari ratings
+    rating_stats = ratings.groupby('isbn')['rating'].mean().reset_index()
+    rating_stats.rename(columns={'rating': 'score'}, inplace=True)
+
+    # 2. Ambil n random books
+    sample = books.sample(n=n).copy()
+
+    # 3. Gabungkan skor ke sample berdasarkan ISBN
+    sample = sample.merge(rating_stats, how='left', left_on='ISBN', right_on='isbn')
+
+    # 4. Return data dalam format konsisten
+    results = []
+    for _, row in sample.iterrows():
+        try:
+            year_raw = row['Year-Of-Publication']
+            year = int(year_raw) if pd.notna(year_raw) and int(year_raw) > 1000 and int(year_raw) <= 2050 else None
+        except:
+            year = None
+
+        results.append({
             "isbn": row['ISBN'],
             "title": row['Book-Title'],
             "author": row['Book-Author'],
-            "year": row['Year-Of-Publication']
-        }
-        for _, row in sample.iterrows()
-    ]
+            "publisher": row['Publisher'],
+            "year": year,
+            "score": round(row['score'], 2)/10 if pd.notna(row['score']) else None
+        })
+
+    return results
 
 
-def get_similar_books_cf(isbn, books, model=None, top_n=5):
+
+def get_similar_books_cf(isbn, books, model=None, top_n=6):
     """
     Dummy collaborative similarity based on index (can be replaced with actual embedding-based similarity)
     For now, just return random books for demo

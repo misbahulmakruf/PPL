@@ -1,96 +1,142 @@
-Berikut adalah contoh `README.md` dalam format markdown untuk proyek Book Recommender System Anda:
+# 📚 Sistem Rekomendasi Buku 🚀
 
-```markdown:d:\1.Perkuliahan\2. Semester 2\Project Management\book_recommender_system\README.md
-# Book Recommender System
+---
 
-A modern book recommendation system built with FastAPI (backend API) and Streamlit (frontend UI).
+## 🔹 Konsep Utama
 
-## Features
+* Sistem rekomendasi buku modern
+* Dibangun dengan **FastAPI** (backend API) dan **Streamlit** (frontend UI)
 
-- Personalized book recommendations for users
-- Popular and trending books
-- Random book discovery
-- Content-based and collaborative filtering recommendations
-- Search books by title
-- Modern, interactive UI
+---
 
-## Project Structure
+## ✨ Fitur Utama
+
+* ✅ Rekomendasi buku yang dipersonalisasi
+* 🔥 Buku populer dan sedang tren
+* 🎲 Penemuan buku acak
+* 🧠 Rekomendasi berbasis konten dan *collaborative filtering*
+* 🔍 Pencarian buku berdasarkan judul
+* 🤖 **Asisten interaktif** (baru!)
+* 🖥️ UI modern dan interaktif
+
+---
+
+## 📂 Struktur Proyek
 
 ```
 book_recommender_system/
-│
-├── api/                # FastAPI backend
-│   ├── main.py
-│   ├── recommender.py
-│   ├── recommender_content.py
-│   └── ...
-│
-├── ui/                 # Streamlit frontend
-│   ├── app.py
-│   ├── modules/
-│   └── pages/
-│
-├── data/               # Raw and processed data
-│   └── raw/
-│
-├── models/ 
-│   └── saved/            # Saved models
-│
+├── api/        # FastAPI backend
+├── ui/         # Streamlit frontend
+├── data/       # Data mentah dan yang sudah diproses
+├── models/     # Model yang disimpan
 └── README.md
 ```
 
-## Getting Started
+---
 
-### 1. Clone the repository
+## 🚀 Cara Memulai
+
+### 1. Klon Repositori
 
 ```bash
-git clone https://github.com/yourusername/book_recommender_system.git
+git clone https://github.com/misbahulmakruf/PPL
 cd book_recommender_system
 ```
 
-### 2. Install dependencies
+### 2. Instal Dependensi
 
 ```bash
 pip install -r requirement.txt
 ```
 
-### 3. Prepare the data
+### 3. Siapkan Data
 
-Place your dataset files (Books.csv, Ratings.csv, Users.csv) in the `data/raw/` directory.
+* Download dataset melalui Google Drive: [Google Drive](https://drive.google.com/drive/u/1/folders/1f2Gn93Hj8RqfveRDna19Y8eL-N72Q9Yo)
+* Letakkan berkas:
 
-### 4. Run the FastAPI backend
+  * `Books.csv`, `Ratings.csv`, `Users.csv` ke dalam `data/raw/`
+  * `book_clean.csv` ke dalam `data/processed/`
+  * `similiarity_cbf.pkl`, `books_cleaned.pkl`, `book_embeddings.npy` ke dalam `models/saved/`
+
+### 4. Membuat File `.env` dari `.env_temp`
+
+Anda sudah memiliki file `.env_temp` di repositori Anda. Ganti nama menjadi `.env`:
+
+* Buka direktori proyek
+* Cari file `.env_temp`
+* Ganti nama menjadi `.env`
+
+Isi file `.env`:
+
+```
+GOOGLE_API_KEY=your_google_api_key
+```
+
+Ganti `your_google_api_key` dengan API key Google Gemini Anda.
+
+---
+
+## 🔹 Cara Mendapatkan Google Gemini API Key
+
+1. **Buka Google Cloud Console:** [https://console.cloud.google.com/](https://console.cloud.google.com/)
+2. **Pilih atau Buat Proyek:**
+
+   * Klik "New Project" jika belum ada proyek
+3. **Aktifkan Gemini API:**
+
+   * Cari "Generative Language API"
+   * Klik dan tekan "Enable"
+4. **Buat Kredensial API Key:**
+
+   * Navigasi ke *APIs & Services* > *Credentials*
+   * Klik "+ CREATE CREDENTIALS" > *API Key*
+   * Salin API key tersebut
+5. **Update `.env`:**
+
+```env
+GOOGLE_API_KEY=AIzaSy...YOUR_ACTUAL_API_KEY...
+```
+
+---
+
+### 5. Jalankan Backend (FastAPI)
 
 ```bash
 uvicorn api.main:app --reload
 ```
-The API will be available at [http://localhost:8000](http://localhost:8000).
 
-### 5. Run the Streamlit frontend
+Akses di: [http://localhost:8000](http://localhost:8000)
+
+### 6. Jalankan Frontend (Streamlit)
 
 ```bash
 streamlit run ui/app.py
 ```
-The UI will be available at [http://localhost:8501](http://localhost:8501).
 
-## API Endpoints
-
-- `/` : Welcome message
-- `/health` : Health check
-- `/recommend/user/{user_id}` : Get recommendations for a user
-- `/popular` : Get popular books
-- `/random` : Get random books
-- `/similar/{isbn}` : Get similar books (collaborative)
-- `/similar_content/{isbn}` : Get similar books (content-based)
-- `/search?title=...` : Search book by title
-- `/newest` : Get newest books
-
-## Credits
-
-Developed by Book Recommender Team.
+Akses di: [http://localhost:8501](http://localhost:8501)
 
 ---
 
-Feel free to contribute or open issues!
-```
+## 🔗 *Endpoint* API
 
-Silakan sesuaikan bagian-bagian tertentu sesuai kebutuhan proyek Anda.
+* `/` : Selamat datang 👋
+* `/health` : Cek kesehatan ❤️‍🩹
+* `/recommend/user/{user_id}` : Rekomendasi untuk pengguna 👤
+* `/popular` : Buku populer 🔥
+* `/random` : Buku acak 🎲
+* `/similar_content/{isbn}` : Buku serupa (berbasis konten) 📚
+* `/search?title=...` : Cari buku 🔎
+* `/newest` : Buku terbaru ✨
+* `/assistant` : Asisten buku 🤖
+
+---
+
+## 🧑‍💻 Kontributor
+
+* Dikembangkan oleh Tim Rekomendasi Buku
+
+---
+
+## 🙏 Kontribusi
+
+* Jangan ragu untuk berkontribusi atau membuka *issue*!

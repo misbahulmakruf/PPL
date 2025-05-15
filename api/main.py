@@ -3,6 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
 import torch
 import numpy as np
+from api import assistant
+from dotenv import load_dotenv
+
 
 # Import fungsi rekomendasi dari api
 from api.recommender import (
@@ -15,6 +18,7 @@ from api.recommender_content import (
     recommend_similar_books,
     search_books_by_title)
 
+load_dotenv()
 app = FastAPI()
 
 # CORS
@@ -49,6 +53,7 @@ except Exception as e:
     users = None
 
 # --- ROUTING ---
+app.include_router(assistant.router)
 
 @app.get("/")
 def root():
@@ -79,7 +84,7 @@ def get_popular():
 @app.get("/random")
 def get_random():
     try:
-        return {"books": get_random_books(books)}
+        return {"books": get_random_books(books,ratings=ratings)}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -182,3 +187,4 @@ def get_newest_books():
         return {"books": result}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
