@@ -1,7 +1,19 @@
-streamlit==1.32.0
+# Core dependencies
+streamlit
 pandas
 numpy
-scikit-learn
-sentence-transformers==2.2.2
-transformers==4.25.1
+requests
+Pillow
 torch==1.12.1
+torchvision
+scikit-learn
+fastapi
+uvicorn
+SentenceTransformer
+
+# Visualization
+matplotlib
+seaborn
+
+# Additional utilities
+python-dotenv
