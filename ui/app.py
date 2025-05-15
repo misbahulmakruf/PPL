@@ -37,7 +37,7 @@ with st.sidebar:
     
     menu = st.radio(
         "Navigation",
-        ["Home", "Popular Books", "Random Discovery", "Similar Books", "AI Assistant"],
+        ["Home", "Popular Books", "Random Discovery", "AI Assistant"],
         index=0,
         key="nav"
     )

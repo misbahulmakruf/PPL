@@ -79,7 +79,7 @@ def get_popular():
 @app.get("/random")
 def get_random():
     try:
-        return {"books": get_random_books(books)}
+        return {"books": get_random_books(books,ratings=ratings)}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
