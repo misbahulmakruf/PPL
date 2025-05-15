@@ -1,5 +1,5 @@
 # Core dependencies
-streamlit
+streamlit==1.32.0
 pandas
 numpy
 requests
@@ -9,7 +9,8 @@ torchvision
 scikit-learn
 fastapi
 uvicorn
-SentenceTransformer
+sentence-transformers==2.2.2
+transformers==4.25.1
 
 # Visualization
 matplotlib
