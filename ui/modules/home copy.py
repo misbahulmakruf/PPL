@@ -1,12 +1,9 @@
 import streamlit as st
 import requests
-from components.layout import show_book_grid_columns, show_loading_spinner
-from modules.popular import show_popular_books
-from modules.random import show_random_books
-
+from components.layout import show_book_grid,show_book_grid_columns, show_loading_spinner
 def show_dashboard_with_search():
-    # --- Hero Section ---
-    st.html("""<style>
+    st.html("""
+        <style>
         .hero-section {
             background: linear-gradient(to right, #4a00e0, #8e2de2);
             color: white;
@@ -28,21 +25,27 @@ def show_dashboard_with_search():
             font-weight: 300;
             opacity: 0.95;
         }
-    </style>
-    <div class="hero-section">
-        <div class="hero-title">📚 Welcome to BookVerse</div>
-        <div class="hero-subtitle">Your personalized reading companion</div>
-    </div>""")
+        </style>
 
-    # --- Search Section ---
+        <div class="hero-section">
+            <div class="hero-title">📚 Welcome to BookVerse</div>
+            <div class="hero-subtitle">Your personalized reading companion</div>
+        </div>
+    """)
+
+
+    # --- Search section ---------------
     st.markdown("### Pencarian Buku")
+    #st.markdown("Masukkan judul buku atau kata kunci untuk mendapatkan rekomendasi buku serupa")
+
+    # Buat kolom untuk field input dan tombol sejajar
     col1, col2 = st.columns([6, 1])
 
     with col1:
         title_query = st.text_input("Masukkan judul atau kata kunci", key="dashboard_search")
 
     with col2:
-        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown("<br>", unsafe_allow_html=True)  # Biar tombol sejajar vertikalnya
         search_clicked = st.button("🔎 Cari", key="dashboard_button")
 
     if search_clicked and title_query.strip():
@@ -56,6 +59,8 @@ def show_dashboard_with_search():
             if response.status_code != 200:
                 st.error(f"❌ Error: {data.get('detail', 'Unknown error')}")
             else:
+
+                # ------- Original Book Card --------
                 st.subheader("📘 Buku Ditemukan")
                 st.success(f"Menemukan buku yang mirip dengan: {data['original']['title']}")
 
@@ -66,40 +71,52 @@ def show_dashboard_with_search():
                     "author": original_book.get("author"),
                     "publisher": original_book.get("publisher"),
                     "year": original_book.get("year"),
-                    "score": original_book.get("score") / 10,
+                    "score": original_book.get("score")/10,
                     "Image-URL-L": f"http://covers.openlibrary.org/b/isbn/{original_book.get('isbn')}-L.jpg"
                 }
 
+                from components.layout import show_book_grid_columns
                 show_book_grid_columns([original_card], with_rating=True)
 
+                # ------- Recommendations --------
                 st.subheader("📚 Rekomendasi")
                 show_book_grid_columns(data["recommendations"], with_rating=True)
 
         except Exception as e:
             st.error(f"❌ Failed to fetch recommendation: {e}")
 
-    # --- Style tombol ---
-    st.html("""<style>
-        .stButton button {
-            background-color: #2E3192;
-            color: white;
-            padding: 0.5rem 1.2rem;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 1rem;
-        }
-        .stButton button:hover {
-            background-color: #1b1e6b;
-        }
-    </style>""")
 
-    # --- Tabs for Popular and Random ---
-    st.markdown("### 📖 Jelajahi Buku")
-    tab1, tab2 = st.tabs(["🔥 Buku Populer", "🎲 Temukan Buku secara Acak"])
+    
+    st.html("""
+    <style>
+    .stButton button {
+        background-color: #2E3192;
+        color: white;
+        padding: 0.5rem 1.2rem;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+    .stButton button:hover {
+        background-color: #1b1e6b;
+    }
+    </style>
+    """)
 
-    with tab1:
-        show_popular_books()
 
-    with tab2:
-        show_random_books()
+
+    # --- Newest Books section ---
+    # try:
+    #     res = requests.get("http://localhost:8000/popular")
+    #     res.raise_for_status()
+    #     new_books = res.json().get("books", [])
+    # except Exception as e:
+    #     st.error(f"Failed to load newest books: {e}")
+    #     return
+
+    # if new_books:
+    #     st.markdown("### 🆕 Newest Books")
+    #     show_book_grid(new_books[:10])
+    # else:
+    #     st.warning("No new books found.")

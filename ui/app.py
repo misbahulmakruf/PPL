@@ -38,7 +38,7 @@ with st.sidebar:
     
     menu = st.radio(
         "Navigation",
-        ["Home", "Popular Books", "Random Discovery", "AI Assistant","All Books"],
+        ["Home", "AI Assistant","Database Buku"],
         index=0,
         key="nav"
     )
@@ -65,7 +65,7 @@ elif menu == "Similar Books":
         show_similar_books(title)
 elif menu == "AI Assistant":
     show_ai_assistant_from_api()
-elif menu == "All Books":
+elif menu == "Database Buku":
     show_all_books_filtered()
 
 
