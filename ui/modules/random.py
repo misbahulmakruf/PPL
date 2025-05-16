@@ -5,7 +5,7 @@ from components.layout import show_book_grid_columns, show_loading_spinner
 API_URL = "http://localhost:8000"
 
 def show_random_books():
-    st.header("🎲 Random Book Discovery")
+    #st.header("🎲 Random Book Discovery")
 
     if st.button("Discover Random Books"):
         spinner_slot = show_loading_spinner()

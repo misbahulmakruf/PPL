@@ -5,7 +5,7 @@ import torch
 import numpy as np
 from api import assistant
 from dotenv import load_dotenv
-
+from fastapi import Query
 
 # Import fungsi rekomendasi dari api
 from api.recommender import (
@@ -39,7 +39,7 @@ try:
     ratings.columns = ratings.columns.str.strip()
     ratings = ratings[['User-ID', 'ISBN', 'Book-Rating']]
     ratings.columns = ['user_id', 'isbn', 'rating']
-    books['Year-Of-Publication']=int(books['Year-Of-Publication']) if str(books['Year-Of-Publication']).isdigit() else None
+    #books['Year-Of-Publication']=int(books['Year-Of-Publication']) if str(books['Year-Of-Publication']).isdigit() else None
     # books['Year-Of-Publication'] = pd.to_numeric(books['Year-Of-Publication'], errors='coerce')
     # books = books.dropna(subset=['Year-Of-Publication'])
     # books['Year-Of-Publication'] = books['Year-Of-Publication'].astype(int)
@@ -188,3 +188,115 @@ def get_newest_books():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.get("/books")
+def get_books(
+    page: int = Query(1, ge=1),
+    size: int = Query(100, ge=1, le=500),
+    query: str = ""
+):
+    try:
+        if books is None:
+            raise HTTPException(status_code=500, detail="Books data not loaded")
+
+        filtered_books = books
+        if query:
+            query_lower = query.lower()
+            filtered_books = books[
+                books["Book-Title"].str.lower().str.contains(query_lower) |
+                books["Book-Author"].str.lower().str.contains(query_lower)
+            ]
+
+        total = len(filtered_books)
+        start_idx = (page - 1) * size
+        end_idx = start_idx + size
+        page_data = filtered_books.iloc[start_idx:end_idx].fillna("")
+
+        return {
+            "total": total,
+            "page": page,
+            "size": size,
+            "books": page_data.to_dict(orient="records")
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/year_range")
+def get_year_range():
+    try:
+        print("books:")
+        print(books.head())
+        if books is None:
+            raise HTTPException(status_code=500, detail="Books data not loaded")
+        if "Year-Of-Publication" not in books.columns:
+            raise HTTPException(status_code=500, detail="Year-Of-Publication column not found")
+        books_clean = books.copy()
+        print("books_clean:")
+        print(books_clean.head())
+        if books_clean.empty:
+            raise HTTPException(status_code=500, detail="No valid year data found")
+        min_year = int(books_clean["Year-Of-Publication"].min())
+        max_year = int(books_clean["Year-Of-Publication"].max())
+        print("min_year:")
+        print(min_year)
+        print("max_year:")
+        print(max_year)
+        return {"min": min_year, "max": max_year}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+        
+@app.get("/books_by_year_range")
+def get_books_by_year_range(
+    page: int = Query(1, ge=1),
+    size: int = Query(20, ge=1, le=100),
+    year_start: int = Query(...),
+    year_end: int = Query(...)
+):
+    try:
+        books_filtered = books[["ISBN","Book-Title", "Book-Author", "Year-Of-Publication"]].copy()
+        books_filtered["Year-Of-Publication"] = pd.to_numeric(books_filtered["Year-Of-Publication"], errors="coerce")
+        filtered = books_filtered[
+            (books_filtered["Year-Of-Publication"] >= year_start) &
+            (books_filtered["Year-Of-Publication"] <= year_end)
+        ].sort_values("Book-Title")
+
+        total = len(filtered)
+        start = (page - 1) * size
+        end = start + size
+
+        return {
+            "total": total,
+            "page": page,
+            "books": filtered.iloc[start:end].fillna("").to_dict(orient="records")
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/books_by_year")
+def get_books_by_year(
+    page: int = Query(1, ge=1),
+    size: int = Query(20, ge=1, le=100),
+    year: int = Query(2000)
+):
+    try:
+        if books is None:
+            raise HTTPException(status_code=500, detail="Books data not loaded")
+
+        # Konversi tahun
+        books_filtered = books.copy()
+        books_filtered["Year-Of-Publication"] = pd.to_numeric(books_filtered["Year-Of-Publication"], errors="coerce")
+        filtered = books_filtered[books_filtered["Year-Of-Publication"] == year]
+
+        # Sort judul secara alfabet
+        filtered = filtered.sort_values("Book-Title")
+
+        total = len(filtered)
+        start = (page - 1) * size
+        end = start + size
+        return {
+            "total": total,
+            "page": page,
+            "books": filtered.iloc[start:end].fillna("").to_dict(orient="records")
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

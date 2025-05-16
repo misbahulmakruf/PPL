@@ -6,6 +6,7 @@ from modules.similar import show_similar_books
 from modules.user_recommend import show_user_recommend
 from modules.home import show_dashboard_with_search
 from modules.assistant_ui import show_ai_assistant_from_api
+from modules.all_books import show_all_books_filtered
 # --- Page config ---
 st.set_page_config(
     page_title="BookVerse",
@@ -32,12 +33,12 @@ icon_path = os.path.join(os.path.dirname(__file__), "static", "icons", "book.png
 with st.sidebar:
     st.image(icon_path, width=60)# ⬅️ logo Anda
     st.title("BookVerse")
-    st.markdown("Discover your next favorite book")
+    st.markdown("Temukan Buku Favorit mu selanjutnya")
     st.markdown("---")
     
     menu = st.radio(
         "Navigation",
-        ["Home", "Popular Books", "Random Discovery", "AI Assistant"],
+        ["Home", "Popular Books", "Random Discovery", "AI Assistant","All Books"],
         index=0,
         key="nav"
     )
@@ -54,7 +55,7 @@ elif menu == "Popular Books":
     show_popular_books()
 
 elif menu == "Random Discovery":
-    st.title("Discover Random Books")
+    st.title("Temukan Buku Acakmu")
     show_random_books()
 
 elif menu == "Similar Books":
@@ -64,6 +65,10 @@ elif menu == "Similar Books":
         show_similar_books(title)
 elif menu == "AI Assistant":
     show_ai_assistant_from_api()
+elif menu == "All Books":
+    show_all_books_filtered()
+
+
 
 # --- Footer ---
 st.html("<hr>")
