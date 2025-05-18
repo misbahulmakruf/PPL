@@ -14,7 +14,7 @@ genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel('gemini-2.0-flash')  # atau 'gemini-1.5-flash' / 'gemini-2.0-flash'
 
 # Load data
-books = pd.read_csv("data/processed/books_clean.csv")
+books = pd.read_csv("data/processed/books_cleaned.csv")
 book_embeddings = np.load("models/saved/book_embeddings.npy")
 embed_model = SentenceTransformer("all-MiniLM-L6-v2")
 

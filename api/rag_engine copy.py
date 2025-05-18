@@ -7,7 +7,7 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 
 # Load precomputed
-books = pd.read_csv("data/processed/books_clean.csv")
+books = pd.read_csv("data/processed/books_cleaned.csv")
 book_embeddings = np.load("model/saved/book_embeddings.npy")
 print("Loaded embeddings shape:", book_embeddings.shape)
 print("First title:", books.iloc[0]["Book-Title"])
