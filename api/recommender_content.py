@@ -1,7 +1,7 @@
 import joblib
 
 # Load data once
-books = joblib.load("models/saved/books_cleaned.pkl")
+books = joblib.load("models/saved/books_cleaned_cbf.pkl")
 similarity = joblib.load("models/saved/similarity_cbf.pkl")
 
 # Fungsi API

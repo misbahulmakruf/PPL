@@ -15,7 +15,7 @@ model = genai.GenerativeModel('gemini-2.0-flash')  # atau 'gemini-1.5-flash' / '
 
 # Load data
 books = pd.read_csv("data/processed/books_cleaned.csv")
-book_embeddings = np.load("models/saved/book_embeddings.npy")
+book_embeddings = np.load("models/saved/book_embeddings_fp16.npy").astype(np.float32)
 embed_model = SentenceTransformer("all-MiniLM-L6-v2")
 
 # === Fungsi LLM ===
