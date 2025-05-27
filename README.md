@@ -133,7 +133,13 @@ Akses di: [http://localhost:8501](http://localhost:8501)
 
 ## 🧑‍💻 Kontributor
 
-* Dikembangkan oleh Tim Rekomendasi Buku
+* Dikembangkan oleh Tim Rekomendasi Buku (KELOMPOK 5)
+* Misbahul Makruf
+* Najwan Yusnianda
+* Fadhallah
+* Nuwairy El Furqany
+* Irwan Saputra
+* Mukhlisin
 
 ---
 
