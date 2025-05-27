@@ -31,7 +31,7 @@ def show_dashboard_with_search():
     </style>
     <div class="hero-section">
         <div class="hero-title">📚 Welcome to BookVerse</div>
-        <div class="hero-subtitle">Your personalized reading companion</div>
+        <div class="hero-subtitle">Sahabat Rekomendasi Bacaan Anda</div>
     </div>""")
 
     # --- Search Section ---

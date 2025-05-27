@@ -1,7 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
-import torch
 import numpy as np
 from api import assistant
 from dotenv import load_dotenv
@@ -32,8 +31,8 @@ app.add_middleware(
 
 # Load data
 try:
-    books = pd.read_csv("data/raw/Books.csv", delimiter=",")
-    ratings = pd.read_csv("data/raw/Ratings.csv", delimiter=",")
+    books = pd.read_csv("data/processed/books_cleaned.csv", delimiter=",")
+    ratings = pd.read_csv("data/processed/ratings_cleaned.csv", delimiter=",")
     users = pd.read_csv("data/raw/Users.csv", delimiter=",")
     print(books.info())
     ratings.columns = ratings.columns.str.strip()

@@ -5,7 +5,7 @@ from sklearn.metrics.pairwise import linear_kernel
 from tqdm import tqdm
 
 # Load book data
-books = pd.read_csv("data/raw/Books.csv", encoding="latin-1", on_bad_lines='skip')
+books = pd.read_csv("data/processed/books_cleaned.csv", encoding="latin-1", on_bad_lines='skip')
 books = books.dropna(subset=['ISBN', 'Book-Title', 'Book-Author'])
 books['combined_features'] = books['Book-Title'].fillna('') + " " + books['Book-Author'].fillna('')
 
@@ -36,5 +36,5 @@ for idx in tqdm(range(tfidf_matrix.shape[0])):
 
 # Save artifacts
 joblib.dump(similarity_dict, "models/saved/similarity_content_top5.pkl")
-joblib.dump(books, "models/saved/books_cleaned.pkl")
+joblib.dump(books, "models/saved/books_cleaned_cbf.pkl")
 print("Done.")

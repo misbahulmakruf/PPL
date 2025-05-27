@@ -1,7 +1,6 @@
 import pandas as pd
 import pickle
 
-from surprise import SVD
 
 model = SVD()
 # training...
@@ -10,8 +9,8 @@ with open("svd_model.pkl", "wb") as f:
 
 
 # Load ratings dan books
-ratings = pd.read_csv("data/raw/Ratings.csv", encoding="latin-1", on_bad_lines='skip')
-books = pd.read_csv("data/raw/Books.csv", encoding="latin-1", on_bad_lines='skip')
+ratings = pd.read_csv("data/processed/ratings_cleaned.csv", encoding="latin-1", on_bad_lines='skip')
+books = pd.read_csv("data/processed/books_cleaned.csv", encoding="latin-1", on_bad_lines='skip')
 
 # Bersihkan kolom
 ratings.columns = ratings.columns.str.strip()
